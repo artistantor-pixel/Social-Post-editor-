@@ -628,10 +628,10 @@ export default function SocialPosterGenerator() {
             />
             
             {/* The Preview Glass Box is removed. Just the Poster now! */}
-            <div className="relative z-10 m-auto flex flex-col items-center justify-center min-h-0 md:min-h-[400px]">
+            <div className="relative z-10 w-full h-full flex flex-col items-center justify-center min-h-0 md:min-h-[400px]">
               
               {/* Responsive Scaling Wrapper */}
-              <div className="transform transition-transform origin-center flex items-center justify-center">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform transition-transform origin-center flex items-center justify-center">
                 <div className={`
                   ${aspectRatio === 'square' ? 'scale-[0.50] sm:scale-[0.65] md:scale-[0.85] lg:scale-[0.95]' : 'scale-[0.50] sm:scale-[0.65] md:scale-[0.9] lg:scale-[1.0]'}
                   transition-all duration-300
