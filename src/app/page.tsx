@@ -615,7 +615,7 @@ export default function SocialPosterGenerator() {
         </div>
         
         {/* Right Area - Canvas Workspace */}
-        <div className={`w-full md:flex-1 h-[35vh] md:h-[calc(100vh-104px)] bg-white/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border-b border-white/80 md:border-none relative flex flex-col overflow-hidden transform-gpu isolate sticky top-[96px] md:top-[104px] self-start z-[40] shadow-md md:shadow-none`}>
+        <div className={`w-full md:flex-1 h-[35vh] min-h-[280px] sm:min-h-[360px] md:h-[calc(100vh-104px)] bg-white/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border-b border-white/80 md:border-none relative flex flex-col overflow-hidden transform-gpu isolate sticky top-[96px] md:top-[104px] self-start z-[40] shadow-md md:shadow-none`}>
            {/* Beautiful subtle dot pattern background */}
            <div className="absolute inset-0 bg-dot-pattern opacity-[0.15]" />
            
