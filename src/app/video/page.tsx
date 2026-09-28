@@ -9,12 +9,12 @@ import { toPng } from 'html-to-image';
 import Link from "next/link";
 import { Video } from "lucide-react";
 
-export default function SocialPosterGenerator() {
+export default function VideoPosterGenerator() {
   const [headline, setHeadline] = useState("অবিশ্বাস্য জয়! ফাইনালে শেষ মুহূর্তের গোলে চ্যাম্পিয়ন ঢাকা আবাহনী");
   const [category, setCategory] = useState("খেলাধুলা");
-  const [bgImageUrl, setBgImageUrl] = useState("https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=1200");
+  const [bgVideoUrl, setBgVideoUrl] = useState(""); // URL for uploaded video
   const [bgPosition, setBgPosition] = useState("center");
-  const [aspectRatio, setAspectRatio] = useState("square"); 
+  const [aspectRatio, setAspectRatio] = useState("16:9"); 
   const [template, setTemplate] = useState("breaking"); 
 
   // Image Handling States
@@ -59,7 +59,7 @@ export default function SocialPosterGenerator() {
     const file = e.target.files?.[0];
     if (file) {
       const localUrl = URL.createObjectURL(file);
-      setBgImageUrl(localUrl);
+      setBgVideoUrl(localUrl);
     }
   };
 
@@ -185,8 +185,8 @@ export default function SocialPosterGenerator() {
     let classes = "";
     
     // Size
-    if (template === 'quote') classes += ' text-2xl md:text-3xl lg:text-4xl';
-    else if (aspectRatio === 'square') {
+    if (template === 'video_quote') classes += ' text-2xl md:text-3xl lg:text-4xl';
+    else if (aspectRatio === '1:1' || aspectRatio === '9:16') {
       if (headlineSize === 'small') classes += ' text-3xl';
       else if (headlineSize === 'medium') classes += ' text-4xl';
       else classes += ' text-5xl';
@@ -198,7 +198,7 @@ export default function SocialPosterGenerator() {
 
     // Font Family
     if (fontFamily === 'lishadhinata') classes += ' font-lishadhinata';
-    else if (template === 'quote' || template === 'magazine' || fontFamily === 'serif') classes += ' font-serif';
+    else if (template === 'video_quote' || template === 'magazine' || fontFamily === 'serif') classes += ' font-serif';
     else if (fontFamily === 'mono') classes += ' font-mono';
     else classes += ' font-sans';
 
@@ -211,19 +211,19 @@ export default function SocialPosterGenerator() {
   };
 
   const getCanvasStyle = () => {
-    if (template === 'quote') {
-      return { backgroundImage: `url(${bgImageUrl})`, backgroundColor: 'black', backgroundSize: 'cover', backgroundPosition: bgPosition };
+    if (template === 'video_quote') {
+      return { backgroundColor: 'black' };
     }
     if (template === 'split') {
-      return { backgroundColor: brandColor, backgroundImage: 'none' }; 
+      return { backgroundColor: brandColor }; 
     }
     if (template === 'magazine') {
-      return { backgroundColor: '#ffffff', backgroundImage: 'none' };
+      return { backgroundColor: '#ffffff' };
     }
     if (template === 'cinematic') {
-      return { backgroundColor: '#000000', backgroundImage: 'none' };
+      return { backgroundColor: '#000000' };
     }
-    return { backgroundImage: `url(${bgImageUrl})`, backgroundColor: 'black', backgroundSize: 'cover', backgroundPosition: bgPosition };
+    return { backgroundColor: 'black' };
   };
 
   const getLogoPositionClass = () => {
@@ -273,8 +273,8 @@ export default function SocialPosterGenerator() {
 
         <div className="flex items-center gap-2 md:gap-4">
           <div className="hidden md:flex bg-slate-100 p-1 rounded-full items-center">
-             <Link href="/" className="px-4 py-1.5 rounded-full text-xs font-bold bg-white text-indigo-600 shadow-sm transition-all">Poster</Link>
-             <Link href="/video" className="px-4 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800 transition-all flex items-center gap-1"><Video className="w-3 h-3" /> Video</Link>
+             <Link href="/" className="px-4 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:text-slate-800 transition-all">Poster</Link>
+             <Link href="/video" className="px-4 py-1.5 rounded-full text-xs font-bold bg-white text-indigo-600 shadow-sm transition-all flex items-center gap-1"><Video className="w-3 h-3" /> Video</Link>
           </div>
 
           <div className="flex items-center">
@@ -290,7 +290,7 @@ export default function SocialPosterGenerator() {
             ) : (
               <Download className="mr-2 h-4 w-4 md:h-5 md:w-5 relative z-10 text-white" />
             )}
-            <span className="relative z-10">{isDownloading ? "EXPORTING..." : "EXPORT HD"}</span>
+            <span className="relative z-10">{isDownloading ? "EXPORTING..." : "EXPORT SNAPSHOT"}</span>
           </Button>
         </div>
         </div>
@@ -380,19 +380,18 @@ export default function SocialPosterGenerator() {
                      <div className="flex bg-white/30 backdrop-blur-md p-1 border border-white/60 shadow-sm text-slate-700 rounded-xl">
                        <button onClick={() => setImageMethod('upload')} className={`flex-1 text-xs py-1.5 rounded-md font-medium ${imageMethod === 'upload' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>Upload</button>
                        <button onClick={() => setImageMethod('url')} className={`flex-1 text-xs py-1.5 rounded-md font-medium ${imageMethod === 'url' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}>URL</button>
-                       <button onClick={() => setImageMethod('ai')} className={`flex-1 text-xs py-1.5 rounded-md font-medium ${imageMethod === 'ai' ? 'bg-white text-slate-900 shadow-sm text-primary flex justify-center gap-1' : 'text-slate-500 hover:text-slate-800 flex justify-center gap-1'}`}><Sparkles className="h-3 w-3" /> AI Gen</button>
                      </div>
 
                      <div className="pt-2">
                        {imageMethod === 'upload' && (
                          <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-slate-50 hover:border-indigo-300 transition-colors" onClick={() => fileInputRef.current?.click()}>
                            <Upload className="h-6 w-6 text-slate-400 mb-2" />
-                           <p className="text-xs font-semibold text-slate-600">Click to upload image</p>
-                           <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
+                           <p className="text-xs font-semibold text-slate-600">Click to upload video</p>
+                           <input type="file" ref={fileInputRef} className="hidden" accept="video/*" onChange={handleFileUpload} />
                          </div>
                        )}
                        {imageMethod === 'url' && (
-                         <input type="text" value={bgImageUrl} onChange={(e) => setBgImageUrl(e.target.value)} className="h-11 w-full rounded-lg border border-slate-200 bg-white hover:border-slate-300 transition-colors shadow-sm px-3 py-2 text-sm" placeholder="Paste image URL here..." />
+                         <input type="text" value={bgVideoUrl} onChange={(e) => setBgVideoUrl(e.target.value)} className="h-11 w-full rounded-lg border border-slate-200 bg-white hover:border-slate-300 transition-colors shadow-sm px-3 py-2 text-sm" placeholder="Paste video URL here..." />
                        )}
                        {imageMethod === 'ai' && (
                          <div className="space-y-2">
@@ -433,14 +432,18 @@ export default function SocialPosterGenerator() {
                  <div className="space-y-4">
                    <div className="space-y-2">
                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Format / Size</label>
-                     <div className="flex gap-4">
+                     <div className="flex gap-4 flex-wrap">
                        <label className="flex items-center gap-2 text-sm cursor-pointer">
-                         <input type="radio" checked={aspectRatio === "square"} onChange={() => setAspectRatio("square")} className="text-indigo-600 focus:ring-indigo-600" />
-                         Square (FB/Insta)
+                         <input type="radio" checked={aspectRatio === "16:9"} onChange={() => setAspectRatio("16:9")} className="text-indigo-600 focus:ring-indigo-600" />
+                         16:9
                        </label>
                        <label className="flex items-center gap-2 text-sm cursor-pointer">
-                         <input type="radio" checked={aspectRatio === "landscape"} onChange={() => setAspectRatio("landscape")} className="text-indigo-600 focus:ring-indigo-600" />
-                         Landscape (Link)
+                         <input type="radio" checked={aspectRatio === "1:1"} onChange={() => setAspectRatio("1:1")} className="text-indigo-600 focus:ring-indigo-600" />
+                         1:1
+                       </label>
+                       <label className="flex items-center gap-2 text-sm cursor-pointer">
+                         <input type="radio" checked={aspectRatio === "9:16"} onChange={() => setAspectRatio("9:16")} className="text-indigo-600 focus:ring-indigo-600" />
+                         9:16
                        </label>
                      </div>
                    </div>
@@ -448,37 +451,17 @@ export default function SocialPosterGenerator() {
                    <div className="space-y-2">
                      <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">Design Template</label>
                      <select value={template} onChange={(e) => setTemplate(e.target.value)} className="flex h-11 w-full rounded-lg border border-slate-200 bg-white hover:border-slate-300 transition-colors shadow-sm px-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
-                       <option value="breaking">1. Breaking News (Color Gradient)</option>
-                       <option value="standard">2. Standard News (Dark Overlay)</option>
-                       <option value="glass">3. Glassmorphism Card (Modern)</option>
-                       <option value="minimal_white">4. Minimalist White (Clean)</option>
-                       <option value="bordered">5. Bold Border Frame (Pop Art)</option>
-                       <option value="split">6. Split Screen (Top Image / Bottom Color)</option>
-                       <option value="duotone">7. Cyberpunk Duotone</option>
-                       <option value="quote">8. Quote / Statement (Beautiful)</option>
-                       <option value="neon_glow">9. Neon Glow (Futuristic)</option>
-                       <option value="magazine">10. Editorial Magazine (Classy)</option>
-                       <option value="cinematic">11. Cinematic Widescreen (Epic)</option>
-                       <option value="polaroid">12. Vintage Polaroid (Retro)</option>
-                       <option value="tweet">13. Twitter/X Post (Social)</option>
-                       <option value="news_ticker">14. Live News Ticker (Broadcast)</option>
-                       <option value="brutalism">15. Neo-Brutalism (Bold/Harsh)</option>
-                       <option value="holographic">16. Holographic Tech (Futuristic)</option>
-                       <option value="elegant_serif">17. Elegant Luxury (Clean)</option>
-                       <option value="sports_stat">18. Sports Match Day (Dynamic)</option>
-                       <option value="podcast">19. Podcast Cover (Audio)</option>
-                       <option value="retro_wave">20. 80s Retro Wave (Synth)</option>
-                       <option value="comic_book">21. Comic Book Panel (Pop Art)</option>
-                       <option value="cyber_glitch">22. Cyber Glitch (Hacker)</option>
-                       <option value="watercolor">23. Soft Watercolor (Artistic)</option>
-                       <option value="glass_dark">24. Dark Glass Card (Sleek)</option>
-                       <option value="monochrome">25. B&W Monochrome (Dramatic)</option>
-                       <option value="neon_border">26. Glowing Neon Border (Vivid)</option>
+                       <option value="breaking">1. Breaking News</option>
+                       <option value="video_vlog">2. Vlog Lower Third (Reel Safe)</option>
+                       <option value="video_top_banner">3. Top Banner (Reel Safe)</option>
+                       <option value="video_centered_glow">4. Centered Glow (Reel Safe)</option>
+                       <option value="video_quote">5. Floating Quote (Reel Safe)</option>
+                       <option value="video_glass_sidebar">6. Glass Sidebar (Reel Safe)</option>
                      </select>
                    </div>
 
                    {/* Quote Specific Settings */}
-                   {template === 'quote' && (
+                   {template === 'video_quote' && (
                      <div className="space-y-4 border border-white/70 bg-white/40 backdrop-blur-xl p-4 rounded-2xl shadow-sm">
                        <label className="text-xs font-bold text-indigo-700 uppercase tracking-wide">Quote Details</label>
                        <div className="grid grid-cols-2 gap-4">
@@ -631,10 +614,13 @@ export default function SocialPosterGenerator() {
            <div className="w-full flex-1 flex max-md:items-center max-md:justify-center p-2 sm:p-4 lg:p-8 z-10 overflow-clip md:overflow-auto custom-scrollbar relative h-full transform-gpu">
             
             {/* Generated Background Blur Glows */}
-            <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] opacity-10 blur-3xl pointer-events-none transition-all duration-1000"
-              style={{ backgroundImage: bgImageUrl ? `url(${bgImageUrl})` : 'none', backgroundSize: 'cover' }}
-            />
+            {bgVideoUrl && (
+              <video 
+                src={bgVideoUrl}
+                autoPlay loop muted playsInline
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] opacity-10 blur-3xl pointer-events-none transition-all duration-1000 object-cover"
+              />
+            )}
             
             {/* The Preview Glass Box is removed. Just the Poster now! */}
             <div className="relative z-10 w-full h-full flex flex-col items-center justify-center min-h-0 md:min-h-[400px]">
@@ -642,7 +628,7 @@ export default function SocialPosterGenerator() {
               {/* Responsive Scaling Wrapper */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform transition-transform origin-center flex items-center justify-center">
                 <div className={`
-                  ${aspectRatio === 'square' ? 'scale-[0.50] sm:scale-[0.65] md:scale-[0.85] lg:scale-[0.95]' : 'scale-[0.50] sm:scale-[0.65] md:scale-[0.9] lg:scale-[1.0]'}
+                  ${aspectRatio === '9:16' ? 'scale-[0.45] sm:scale-[0.55] md:scale-[0.75] lg:scale-[0.85]' : aspectRatio === '1:1' ? 'scale-[0.50] sm:scale-[0.65] md:scale-[0.85] lg:scale-[0.95]' : 'scale-[0.50] sm:scale-[0.65] md:scale-[0.9] lg:scale-[1.0]'}
                   transition-all duration-300
                 `}>
                   
@@ -650,7 +636,7 @@ export default function SocialPosterGenerator() {
                   <div 
                     id="poster-canvas" 
                     className={`relative overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.1)] ring-1 ring-slate-900/5 transition-all duration-300 flex flex-col shrink-0
-                      ${aspectRatio === 'square' ? 'w-[500px] h-[500px]' : 'w-[600px] h-[315px]'}
+                      ${aspectRatio === '16:9' ? 'w-[640px] h-[360px]' : aspectRatio === '9:16' ? 'w-[360px] h-[640px]' : 'w-[500px] h-[500px]'}
                     `}
             style={{
               border: template === 'bordered' ? `16px solid ${brandColor}` : 'none',
@@ -659,75 +645,38 @@ export default function SocialPosterGenerator() {
           >
             {/* MAIN IMAGE & CONTENT AREA (Flex-1 allows it to shrink when banner ad is present) */}
             <div 
-              className="flex-1 relative w-full flex flex-col justify-end overflow-hidden"
-              style={template !== 'split' ? { 
-                backgroundImage: `url(${bgImageUrl})`, 
-                backgroundSize: 'cover', 
-                backgroundPosition: bgPosition 
-              } : {}}
+              className="flex-1 relative w-full flex flex-col justify-end overflow-hidden bg-black"
             >
-              {/* SPLIT TEMPLATE BACKGROUND IMAGE */}
-              {template === 'split' && (
-                <div 
-                  className="absolute top-0 left-0 w-full h-[55%] bg-cover bg-center"
-                  style={{ backgroundImage: `url(${bgImageUrl})` }}
+              {/* VIDEO LAYER */}
+              {template !== 'split' && bgVideoUrl && (
+                <video 
+                  src={bgVideoUrl}
+                  autoPlay loop muted playsInline
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{ objectPosition: bgPosition }}
                 />
-              )}
-
-              {/* DUOTONE OVERLAY EFFECT */}
-              {template === 'duotone' && (
-                <div className="absolute inset-0 bg-blue-600 mix-blend-lighten" />
-              )}
-              {template === 'duotone' && (
-                <div className="absolute inset-0 mix-blend-multiply opacity-80" style={{ backgroundColor: brandColor }} />
               )}
 
               {/* Overlays based on template */}
               {template === 'breaking' && (
-                <div className="absolute inset-0 bg-gradient-to-t via-black to-transparent" style={{ opacity: overlayOpacity / 100, backgroundImage: `linear-gradient(to top, ${brandColor}, black, transparent)` }} />
+                <div className="absolute inset-0 bg-gradient-to-t via-black/80 to-transparent" style={{ opacity: overlayOpacity / 100, backgroundImage: `linear-gradient(to top, ${brandColor}, black, transparent)` }} />
               )}
-              {template === 'standard' && (
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black to-transparent" style={{ opacity: overlayOpacity / 100 }} />
+              {template === 'video_vlog' && (
+                <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-black via-black/70 to-transparent" style={{ opacity: overlayOpacity / 100 }} />
               )}
-              {template === 'glass' && (
-                <div className="absolute inset-0 bg-black/20" />
+              {template === 'video_top_banner' && (
+                <div className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-black via-black/80 to-transparent" style={{ opacity: overlayOpacity / 100 }} />
               )}
-              {template === 'minimal_white' && (
-                <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-transparent" style={{ opacity: (overlayOpacity + 20) / 100 }} />
+              {template === 'video_centered_glow' && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-[80%] h-[50%] bg-black/60 blur-[100px] rounded-full" />
+                </div>
               )}
-              {template === 'bordered' && (
-                <div className="absolute inset-0 bg-black/40" />
+              {template === 'video_quote' && (
+                <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
               )}
-              {template === 'neon_glow' && (
-                <div className="absolute inset-0 bg-black/70 mix-blend-multiply" />
-              )}
-              {template === 'cinematic' && (
-                <>
-                  <div className="absolute top-0 left-0 w-full h-[15%] bg-black z-0 shadow-lg" />
-                  <div className="absolute bottom-0 left-0 w-full h-[25%] bg-black z-0 shadow-lg" />
-                  <div className="absolute inset-0 bg-black/20" />
-                </>
-              )}
-              {template === 'holographic' && (
-                <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/40 via-purple-500/40 to-pink-500/40 mix-blend-color" />
-              )}
-              {template === 'retro_wave' && (
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/50 to-pink-600/80" style={{ backgroundImage: 'linear-gradient(transparent 95%, rgba(255, 255, 255, 0.3) 100%), linear-gradient(90deg, transparent 95%, rgba(255, 255, 255, 0.3) 100%)', backgroundSize: '40px 40px' }} />
-              )}
-              {template === 'comic_book' && (
-                <div className="absolute inset-0 bg-white/10 mix-blend-overlay" style={{ backgroundImage: 'radial-gradient(circle, #000 2px, transparent 2.5px)', backgroundSize: '10px 10px' }} />
-              )}
-              {template === 'cyber_glitch' && (
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-screen" />
-              )}
-              {template === 'watercolor' && (
-                <div className="absolute inset-0 shadow-[inset_0_0_80px_60px_rgba(255,255,255,0.8)]" />
-              )}
-              {template === 'monochrome' && (
-                <div className="absolute inset-0 backdrop-grayscale backdrop-contrast-125" />
-              )}
-              {template === 'neon_border' && (
-                <div className="absolute inset-4 border-[6px] rounded-xl z-20" style={{ borderColor: brandColor, boxShadow: `0 0 20px ${brandColor}, inset 0 0 20px ${brandColor}` }} />
+              {template === 'video_glass_sidebar' && (
+                <div className="absolute top-0 left-0 w-[45%] h-full bg-black/20 backdrop-blur-md border-r border-white/10" />
               )}
               
               {/* BRANDING LOGO (Hidden inside unique Quote template to handle custom positioning) */}
@@ -757,168 +706,59 @@ export default function SocialPosterGenerator() {
                 </div>
               )}
 
-            {/* --- COMPLETELY UNIQUE QUOTE TEMPLATE LAYOUT --- */}
-            {template === 'quote' ? (
-              <div className="relative w-full h-full flex flex-col p-5 sm:p-8">
-                {/* Vibrant Brand-tinted glassmorphism background overlay */}
-                <div className="absolute inset-0 bg-black/60 backdrop-blur-xl" />
-                <div className="absolute inset-0 mix-blend-color opacity-50" style={{ backgroundColor: brandColor }} />
-                
-                {/* Beautiful Inner Card */}
-                <div className="flex-1 bg-white/95 backdrop-blur-3xl rounded-3xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col p-6 sm:p-8 relative overflow-hidden border-2 border-white/80 ring-1 ring-black/5">
-                  
-                  {/* Subtle Gradient Glow inside the card */}
-                  <div className="absolute -top-20 -right-20 w-80 h-80 opacity-20 rounded-full blur-[60px] pointer-events-none" style={{ backgroundColor: brandColor }} />
-                  <div className="absolute -bottom-20 -left-20 w-64 h-64 opacity-10 rounded-full blur-[40px] pointer-events-none" style={{ backgroundColor: brandColor }} />
-                  
-                  {/* Massive background quote mark */}
-                  <div className="absolute -top-6 -left-2 opacity-5 pointer-events-none rotate-6">
-                    <Quote size={180} style={{ color: brandColor, fill: brandColor }} />
-                  </div>
-
-                  {/* Header Row: Category & Date (Informative) */}
-                  <div className="flex justify-between items-center w-full relative z-10 mb-8 border-b border-slate-200/50 pb-4">
-                    <div className="flex items-center gap-3">
-                      {category && (
-                        <div className="px-3 py-1 rounded-sm text-[10px] font-black uppercase tracking-[0.2em] text-white shadow-sm" style={{ backgroundColor: brandColor }}>
-                          {category}
-                        </div>
-                      )}
-                      {postDate && (
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{postDate}</span>
-                      )}
-                    </div>
-                    
-                    {logoPosition !== 'hidden' && (
-                      <Image 
-                        src="/logo.svg" 
-                        alt="Khobor Key Logo" 
-                        width={logoSize * 2.5} 
-                        height={logoSize * 0.8} 
-                        style={{ height: `${logoSize * 0.7}px`, width: 'auto' }}
-                        className="opacity-90"
-                      />
-                    )}
-                  </div>
-
-                  {/* Centered Quote Text */}
-                  <div className="flex-1 flex flex-col justify-center relative z-10 my-4">
-                    <h1 className={`font-serif font-bold tracking-tight text-slate-800 leading-[1.3] drop-shadow-sm ${getHeadlineClasses()} ${textAlign === 'center' ? 'text-center' : textAlign === 'right' ? 'text-right' : 'text-left'}`} style={{ textShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
-                      "{headline}"
-                    </h1>
-                  </div>
-
-                  {/* Bottom Footer: Author Profile & Source (Informative) */}
-                  <div className="mt-6 pt-5 border-t-2 border-slate-100 flex items-center justify-between relative z-10 bg-slate-50/50 -mx-8 -mb-8 px-8 pb-8 pt-6 rounded-b-3xl">
-                    {/* Author Info */}
-                    <div className="flex items-center gap-4">
-                      {quoteAuthorImg && (
-                        <div className="w-14 h-14 rounded-full overflow-hidden shadow-lg shrink-0 border-2" style={{ borderColor: brandColor }}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={quoteAuthorImg} alt={quoteAuthor} className="w-full h-full object-cover" />
-                        </div>
-                      )}
-                      <div className="flex flex-col">
-                        <h3 className="text-base font-black text-slate-900 leading-tight tracking-tight uppercase">{quoteAuthor || 'Anonymous'}</h3>
-                        {quoteDesignation && (
-                          <p className="text-slate-500 text-[11px] font-bold uppercase tracking-[0.15em] mt-1" style={{ color: brandColor }}>{quoteDesignation}</p>
-                        )}
-                      </div>
-                    </div>
-                    
-                    {/* News Source / Domain */}
-                    {newsSource && (
-                      <div className="flex flex-col items-end text-right">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Source</span>
-                        <span className="text-xs font-bold text-slate-800">{newsSource}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
+            {/* --- VIDEO TEMPLATES LAYOUT --- */}
               <div className={`
-                {/* --- STANDARD TEMPLATES LAYOUT --- */}
-                flex flex-col relative z-10
+                flex flex-col relative z-10 w-full h-full justify-end
                 ${textAlign === 'center' ? 'items-center text-center' : textAlign === 'right' ? 'items-end text-right' : 'items-start text-left'}
-                ${template === 'glass' ? 'bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow-2xl mt-auto' : ''}
-                ${template === 'glass_dark' ? 'bg-black/60 backdrop-blur-2xl border border-white/10 p-6 rounded-2xl shadow-2xl mt-auto' : ''}
-                ${template === 'magazine' ? 'bg-white p-6 sm:p-8 m-4 sm:m-6 mt-auto rounded-none shadow-[10px_10px_0px_0px_rgba(0,0,0,0.1)] border-l-8' : ''}
-                ${template === 'brutalism' ? 'bg-[#f4f4f0] p-6 sm:p-8 m-4 sm:m-6 mt-auto rounded-none border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]' : ''}
-                ${template === 'polaroid' ? 'bg-white p-6 sm:p-8 pt-12 m-4 sm:m-6 mt-auto rounded-sm shadow-xl' : ''}
-                ${template === 'tweet' ? 'bg-white p-6 sm:p-8 m-4 sm:m-6 mt-auto rounded-2xl shadow-md border border-slate-200' : ''}
-                ${template === 'news_ticker' ? 'bg-white p-4 sm:p-6 mt-auto rounded-none border-t-[6px] w-full' : ''}
-                ${template === 'elegant_serif' ? 'p-8 pb-10 mb-auto bg-gradient-to-b from-white/90 to-transparent w-full' : ''}
-                ${template === 'cinematic' ? 'p-6 pb-8 mt-auto flex justify-center items-center h-[25%] text-center mb-0' : ''}
-                ${template === 'split' ? 'p-8 pb-10 mt-auto' : ''}
-                ${template === 'sports_stat' ? 'p-8 pb-10 mt-auto bg-gradient-to-t from-black via-black/80 to-transparent skew-y-[-2deg] origin-bottom-left' : ''}
-                ${(aspectRatio === 'square' && !['glass', 'glass_dark', 'split', 'magazine', 'cinematic', 'brutalism', 'polaroid', 'tweet', 'news_ticker', 'elegant_serif', 'sports_stat'].includes(template)) ? 'p-8 pb-10 mt-auto' : (!['glass', 'glass_dark', 'split', 'magazine', 'cinematic', 'brutalism', 'polaroid', 'tweet', 'news_ticker', 'elegant_serif', 'sports_stat'].includes(template)) ? 'p-6 pb-8 mt-auto' : ''}
-              `} style={(template === 'magazine' || template === 'news_ticker') ? { borderColor: brandColor } : {}}>
+                ${template === 'video_vlog' ? 'bg-black/40 backdrop-blur-md p-6 sm:p-8 m-4 mt-auto rounded-2xl border border-white/20' : ''}
+                ${template === 'video_top_banner' ? 'bg-gradient-to-b from-black/80 to-transparent p-8 pt-10 mb-auto w-full' : ''}
+                ${template === 'video_centered_glow' ? 'm-auto p-8' : ''}
+                ${template === 'video_glass_sidebar' ? 'bg-transparent p-8 w-[45%] h-full justify-center' : ''}
+                ${template === 'breaking' ? 'p-8 mt-auto' : ''}
+                ${aspectRatio === '9:16' && template !== 'video_top_banner' && template !== 'video_centered_glow' && template !== 'video_glass_sidebar' && template !== 'video_quote' ? 'pb-32 pr-20' : ''}
+                ${aspectRatio === '9:16' && (template === 'video_centered_glow' || template === 'video_quote') ? 'pr-20' : ''}
+                ${template === 'video_quote' ? 'm-auto p-8 sm:p-12 bg-white/10 backdrop-blur-md rounded-3xl border border-white/20' : ''}
+              `}>
 
-                {/* Top Row: Category and Logo */}
-                {template !== 'tweet' && template !== 'news_ticker' && (
-                  <div className={`w-full mb-6 ${template === 'split' ? 'mb-8' : ''}`}>
-                    {category && (
-                      <div className={`inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm border border-white/20
-                        ${isLightBackground ? 'bg-black text-white' : 'text-white backdrop-blur-md'}
-                      `} style={!isLightBackground ? { backgroundColor: `${brandColor}99` } : {}}>
-                        {category}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Special Template Headers */}
-                {template === 'tweet' && (
-                  <div className="flex items-center gap-3 mb-4 w-full">
-                    <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border border-slate-300">
-                      <Image src={quoteAuthorImg || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100"} alt="Avatar" width={40} height={40} className="w-full h-full object-cover" />
+                {/* Top Row: Category */}
+                <div className="w-full mb-4">
+                  {category && (
+                    <div className={`inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm border border-white/20 text-white backdrop-blur-md`} style={{ backgroundColor: `${brandColor}99` }}>
+                      {category}
                     </div>
-                    <div className="flex flex-col text-left">
-                      <span className="text-sm font-bold text-slate-900 flex items-center gap-1">{quoteAuthor || "NewsDesk"} <svg className="w-4 h-4 text-blue-500 fill-current" viewBox="0 0 24 24"><path d="M22.5 12.5c0-.82-.68-1.5-1.5-1.5h-1c-.55 0-1-.45-1-1v-1c0-.82-.68-1.5-1.5-1.5-.27 0-.52.07-.74.2-.42.24-.97.16-1.3-.23l-.7-.8c-.43-.5-1.12-.66-1.72-.4l-1.03.45c-.48.2-1.04.1-1.42-.25l-.78-.7c-.55-.5-1.38-.6-2.03-.24-.22.13-.47.2-.74.2-.82 0-1.5.68-1.5 1.5v1c0 .55-.45 1-1 1h-1c-.82 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5h1c.55 0 1 .45 1 1v1c0 .82.68 1.5 1.5 1.5.27 0 .52-.07.74-.2.42-.24.97-.16 1.3.23l.7.8c.43.5 1.12.66 1.72.4l1.03-.45c.48-.2 1.04-.1 1.42.25l.78.7c.55.5 1.38.6 2.03.24.22-.13.47-.2.74-.2.82 0 1.5-.68 1.5-1.5v-1c0-.55.45-1 1-1h1c.82 0 1.5-.68 1.5-1.5z"/></svg></span>
-                      <span className="text-xs font-medium text-slate-500">@latest_updates</span>
-                    </div>
-                  </div>
-                )}
-                {template === 'news_ticker' && (
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-sm animate-pulse tracking-widest uppercase">LIVE</span>
-                    <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">{category || "BREAKING NEWS"}</span>
-                  </div>
-                )}
+                  )}
+                </div>
 
                 {/* Headline Text */}
-                <h1 className={`font-bold leading-snug drop-shadow-lg ${getHeadlineClasses()} ${template === 'elegant_serif' ? 'font-serif tracking-tight' : ''} ${template === 'brutalism' ? 'font-black uppercase tracking-tighter drop-shadow-none' : ''} ${template === 'cyber_glitch' ? 'uppercase font-black tracking-widest' : ''}
-                  ${isLightBackground ? 'text-black drop-shadow-none' : 'text-white'}
-                `}
-                style={template === 'neon_glow' ? { textShadow: `0 0 10px ${brandColor}, 0 0 20px ${brandColor}, 0 0 40px ${brandColor}`, color: '#fff' } : template === 'cyber_glitch' ? { textShadow: '3px 0 0 #ff003c, -3px 0 0 #00f0ff' } : {}}
-                >
-                  {headline}
+                <h1 className={`font-bold leading-snug drop-shadow-lg ${getHeadlineClasses()} text-white`}>
+                  {template === 'video_quote' ? `"${headline}"` : headline}
                 </h1>
                 
                 {/* Date and Source */}
-                {(postDate || newsSource) && template !== 'cinematic' && (
-                  <div className={`mt-3 flex flex-wrap items-center gap-3 text-xs md:text-sm font-medium drop-shadow-md
-                    ${isLightBackground ? 'text-gray-700 drop-shadow-none' : 'text-gray-300'}
-                  `}>
+                {(postDate || newsSource) && (
+                  <div className="mt-3 flex flex-wrap items-center gap-3 text-xs md:text-sm font-medium drop-shadow-md text-gray-300">
                     {postDate && <span className="flex items-center gap-1 opacity-90">{postDate}</span>}
                     {postDate && newsSource && <span className="opacity-50">•</span>}
                     {newsSource && <span className="flex items-center gap-1 opacity-90 text-white bg-black/40 px-2 py-0.5 rounded-sm">{newsSource}</span>}
                   </div>
                 )}
-
-                {/* Split Template Special Footer */}
-                {template === 'split' && (
-                  <div className="mt-8 flex justify-between items-end border-t border-black/10 pt-6">
-                    <div className="flex flex-col">
-                      <span className="text-xs font-bold text-black/50 uppercase tracking-widest">In Focus</span>
-                      <span className="text-lg font-black text-black">KHOBOR KEY</span>
+                
+                {/* Quote Author */}
+                {template === 'video_quote' && quoteAuthor && (
+                  <div className="mt-6 flex items-center gap-3 w-full">
+                    {quoteAuthorImg && (
+                      <div className="w-12 h-12 rounded-full overflow-hidden border-2 shrink-0" style={{ borderColor: brandColor }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={quoteAuthorImg} alt={quoteAuthor} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="flex flex-col text-left">
+                      <h3 className="text-sm font-black text-white uppercase">{quoteAuthor}</h3>
+                      {quoteDesignation && <p className="text-[10px] text-gray-300 uppercase">{quoteDesignation}</p>}
                     </div>
-                    {textAlign === 'right' && <div className={`w-8 h-[2px] ${isLightBackground ? 'bg-black' : 'bg-white/50'}`} />}
                   </div>
                 )}
               </div>
-            )} {/* End Conditional Template Check */}
             </div> {/* End Main Image & Content Area */}
 
             {/* Bottom Full Width Banner Advertisement */}
