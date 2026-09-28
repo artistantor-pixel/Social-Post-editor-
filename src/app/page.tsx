@@ -615,7 +615,7 @@ export default function SocialPosterGenerator() {
         </div>
         
         {/* Right Area - Canvas Workspace */}
-        <div className="w-full md:flex-1 ${aspectRatio === 'square' ? 'h-[390px]' : 'h-[240px]'} md:h-[calc(100vh-104px)] bg-white/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border-b border-white/80 md:border-none relative flex flex-col overflow-hidden transform-gpu isolate sticky top-[96px] md:top-[104px] self-start z-[40] shadow-md md:shadow-none">
+        <div className={`w-full md:flex-1 h-[35vh] md:h-[calc(100vh-104px)] bg-white/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none border-b border-white/80 md:border-none relative flex flex-col overflow-hidden transform-gpu isolate sticky top-[96px] md:top-[104px] self-start z-[40] shadow-md md:shadow-none`}>
            {/* Beautiful subtle dot pattern background */}
            <div className="absolute inset-0 bg-dot-pattern opacity-[0.15]" />
            
@@ -633,7 +633,7 @@ export default function SocialPosterGenerator() {
               {/* Responsive Scaling Wrapper */}
               <div className="transform transition-transform origin-center flex items-center justify-center">
                 <div className={`
-                  ${aspectRatio === 'square' ? 'scale-[0.70] sm:scale-[0.80] md:scale-[0.85] lg:scale-[0.95]' : 'scale-[0.60] sm:scale-[0.75] md:scale-[0.9] lg:scale-[1.0]'}
+                  ${aspectRatio === 'square' ? 'scale-[0.50] sm:scale-[0.65] md:scale-[0.85] lg:scale-[0.95]' : 'scale-[0.50] sm:scale-[0.65] md:scale-[0.9] lg:scale-[1.0]'}
                   transition-all duration-300
                 `}>
                   
