@@ -9,6 +9,24 @@ import { toPng } from 'html-to-image';
 import Link from "next/link";
 import { Video } from "lucide-react";
 
+const getBengaliDate = () => {
+  const date = new Date();
+  const months = [
+    "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
+    "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"
+  ];
+  const englishToBengaliNumber = (num: number) => {
+    const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+    return num.toString().split('').map(d => bengaliDigits[parseInt(d)]).join('');
+  };
+  
+  const day = englishToBengaliNumber(date.getDate());
+  const month = months[date.getMonth()];
+  const year = englishToBengaliNumber(date.getFullYear());
+  
+  return `${day} ${month}, ${year}`;
+};
+
 export default function SocialPosterGenerator() {
   const [headline, setHeadline] = useState("অবিশ্বাস্য জয়! ফাইনালে শেষ মুহূর্তের গোলে চ্যাম্পিয়ন ঢাকা আবাহনী");
   const [category, setCategory] = useState("খেলাধুলা");
@@ -27,7 +45,7 @@ export default function SocialPosterGenerator() {
   const [headlineSize, setHeadlineSize] = useState("large"); 
   const [overlayOpacity, setOverlayOpacity] = useState(60); 
   const [isRewriting, setIsRewriting] = useState(false);
-  const [postDate, setPostDate] = useState("২৮ সেপ্টেম্বর, ২০২৬");
+  const [postDate, setPostDate] = useState(getBengaliDate());
   const [newsSource, setNewsSource] = useState("সূত্র: রয়টার্স");
   
   // Advertisement / Sponsor States
