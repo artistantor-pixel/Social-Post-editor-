@@ -56,6 +56,10 @@ export default function SocialPosterGenerator() {
   const [bottomAdUrl, setBottomAdUrl] = useState("");
   const bottomAdInputRef = useRef<HTMLInputElement>(null);
   
+  // Detailed Comment State
+  const [showDetailedComment, setShowDetailedComment] = useState(false);
+  const [detailedCommentText, setDetailedCommentText] = useState("বিস্তারিত জানতে আমাদের ওয়েবসাইট ভিজিট করুন অথবা যোগাযোগ করুন।");
+
   // Quote Template States
   const [quoteAuthor, setQuoteAuthor] = useState("প্রফেসর মুহাম্মদ ইউনূস");
   const [quoteDesignation, setQuoteDesignation] = useState("প্রধান উপদেষ্টা, অন্তর্বর্তীকালীন সরকার");
@@ -379,6 +383,28 @@ export default function SocialPosterGenerator() {
                        className="h-11 w-full rounded-xl border border-white/60 bg-white/50 backdrop-blur-md hover:bg-white/70 transition-all shadow-sm px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 focus:bg-white/90"
                        placeholder="e.g. Source: Reuters (Leave empty to hide)"
                      />
+                   </div>
+
+                   {/* Detailed Comment Toggle */}
+                   <div className="space-y-3 pt-4 border-t border-white/50 mt-4">
+                     <label className="text-xs font-bold text-slate-700 uppercase tracking-wide flex items-center gap-2 cursor-pointer">
+                       <input 
+                         type="checkbox" 
+                         checked={showDetailedComment} 
+                         onChange={(e) => setShowDetailedComment(e.target.checked)} 
+                         className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-600 w-4 h-4" 
+                       />
+                       বিস্তারিত কমেন্টে
+                     </label>
+                     {showDetailedComment && (
+                       <textarea 
+                         value={detailedCommentText}
+                         onChange={(e) => setDetailedCommentText(e.target.value)}
+                         rows={2}
+                         className="w-full rounded-xl border border-white/60 bg-white/50 backdrop-blur-md hover:bg-white/70 transition-all shadow-sm px-3 py-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 focus:bg-white/90"
+                         placeholder="Type detailed comment..."
+                       />
+                     )}
                    </div>
                  </div>
               </section>
@@ -938,6 +964,21 @@ export default function SocialPosterGenerator() {
               </div>
             )} {/* End Conditional Template Check */}
             </div> {/* End Main Image & Content Area */}
+
+            {/* Detailed Comment Block */}
+            {showDetailedComment && detailedCommentText && (
+              <div className={`w-full z-30 shrink-0 px-5 py-3 flex items-center gap-3 relative overflow-hidden transition-all
+                ${isLightBackground ? 'bg-white border-t border-slate-200' : 'bg-black/85 backdrop-blur-2xl border-t border-white/10'}
+              `}>
+                <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundColor: brandColor }} />
+                <div className="w-1.5 h-full min-h-[28px] rounded-full shrink-0 relative z-10 shadow-sm" style={{ backgroundColor: brandColor }} />
+                <p className={`text-[10.5px] md:text-[12px] font-semibold leading-snug w-full relative z-10
+                  ${isLightBackground ? 'text-slate-800' : 'text-white/95 drop-shadow-sm'}
+                `}>
+                  {detailedCommentText}
+                </p>
+              </div>
+            )}
 
             {/* Bottom Full Width Banner Advertisement */}
             {bottomAdUrl && (
